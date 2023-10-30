@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 /bootstrap
 composer.lock
+package-lock.json
