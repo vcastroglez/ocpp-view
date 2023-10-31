@@ -1,11 +1,15 @@
 <script setup>
 
-let chargePoints = [];
+import {reactive} from "vue";
+
+const state = reactive({
+	chargePoints: []
+})
 
 const getChargepoints = () => {
-	chargePoints = [];
+	state.chargePoints = [];
 	axios('/get-charge-points').then(response => {
-		chargePoints = response.data.payload;
+		state.chargePoints = response.data.payload;
 	})
 }
 
@@ -19,7 +23,7 @@ const goto = (route) => {
 <template>
 	<div class="py-12 justify-items-center flex">
 		<div @click="goto('/charge-point/'+chargePoint.id)" class="charge-point p-3"
-		     v-for="chargePoint in chargePoints" :key="chargePoint.id">
+		     v-for="chargePoint in state.chargePoints" :key="chargePoint.id">
 			<div class="">
 				<b>idTag:</b> {{ chargePoint.uuid }}
 			</div>

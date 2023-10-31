@@ -2,18 +2,20 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {Head} from '@inertiajs/vue3';
 import PayloadViewer from "@/Components/CentralSystem/PayloadViewer.vue";
+import {reactive, ref} from "vue";
 
 const props = defineProps({
 	chargePointId: {
 		type: Number,
 	}
 });
-
-let messages = [];
+const state = reactive({
+	messages: []
+})
 const getMessages = () => {
-	messages = [];
+	state.messages = [];
 	axios.get(`/get-messages/${props.chargePointId}`).then(response => {
-		messages = response.data.payload;
+		state.messages = response.data.payload;
 	})
 }
 getMessages();
@@ -37,7 +39,7 @@ getMessages();
 		<div class="py-12">
 			<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 				<div class="bg-white">
-					<div class="p-6 text-gray-900" v-for="message in messages" :key="message.id">
+					<div class="p-6 text-gray-900" v-for="message in state.messages" :key="message.id">
 						<div class="mb-4" style="border-bottom: 1px dashed rgb(128,128,128)">
 							<b style="color: #5269c0">{{ message.type }}</b>
 						</div>
