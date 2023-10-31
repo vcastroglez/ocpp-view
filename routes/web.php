@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChargePointController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+	Route::get('/get-charge-points',[ChargePointController::class, 'get'])->name('charge_points.get');
+	Route::get('/charge-point/{id}',[ChargePointController::class, 'getChargePoint'])->name('charge_point.get');
+	Route::get('/get-messages/{id}',[ChargePointController::class, 'getChargePointMessages'])->name('msg.get');
 });
 
 require __DIR__.'/auth.php';
