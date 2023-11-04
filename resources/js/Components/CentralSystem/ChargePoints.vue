@@ -21,7 +21,7 @@ const goto = (route) => {
 </script>
 
 <template>
-	<div class="py-12 justify-items-center flex">
+	<div class="py-12 justify-items-center flex wrap">
 		<div @click="goto('/charge-point/'+chargePoint.id)" class="charge-point p-3"
 		     v-for="chargePoint in state.chargePoints" :key="chargePoint.id">
 			<div class="">
@@ -44,5 +44,9 @@ const goto = (route) => {
 	max-width: 33%;
 	border: 1px solid black;
 	cursor: pointer;
+}
+
+.wrap {
+	flex-wrap: wrap;
 }
 </style>
