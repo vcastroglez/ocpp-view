@@ -25,7 +25,7 @@ return new class extends Migration{
 		Schema::table('server_msg_queues', function(Blueprint $table){
 			$table->dropForeign('server_msg_queues_user_id_foreign');
 			$table->dropColumn('user_id');
-//			$table->dropColumn('message_type');
+			$table->dropColumn('message_type');
 		});
 	}
 };
