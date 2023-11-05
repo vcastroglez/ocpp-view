@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {Head} from '@inertiajs/vue3';
 import PayloadViewer from "@/Components/CentralSystem/PayloadViewer.vue";
-import {reactive, ref} from "vue";
+import {reactive} from "vue";
 
 const props = defineProps({
 	chargePointId: {
@@ -19,6 +19,17 @@ const getMessages = () => {
 	})
 }
 getMessages();
+
+const triggerMessage = () => {
+	const type = 2;//request 3 is for message
+	const requestedMessage = window.prompt("Enter requested message, possible types:\n\nBootNotification, DiagnosticsStatusNotification, FirmwareStatusNotification, Heartbeat, MeterValues, StatusNotification. \nNOTE: MeterValues can only be triggered if a transaction is up.")
+	const connectorId = window.prompt("Enter connector id, 1 by default") || 1;
+	axios.post('/send-charge-point-msg/'+props.chargePointId,{type,requestedMessage,connectorId}).then(()=>{
+		setTimeout(()=>{
+			getMessages()
+		},2000);
+	});
+}
 </script>
 <template>
 	<Head title="Dashboard"/>
@@ -31,6 +42,7 @@ getMessages();
 					</h2>
 				</div>
 				<div>
+					<button class="button mr-2" @click="triggerMessage()">Trigger Message</button>
 					<button class="button" @click="getMessages">Refresh</button>
 				</div>
 			</div>

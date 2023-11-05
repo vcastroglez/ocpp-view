@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Services\ChargePointService;
 use App\Models\Message;
 use App\Models\MessageType;
+use App\Models\ServerMsgQueue;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ChargePointController extends Controller{
@@ -30,7 +33,7 @@ class ChargePointController extends Controller{
 	{
 		$types = MessageType::all();
 		$heartbeat = $types->where('type', 'Heartbeat')->first();
-		$msgs = Message::query()->where('id_charge_point', $id)->where('id_message_type', '!=', $heartbeat->id)->orderBy('created_at','desc')->get()->map(function($element) use ($types){
+		$msgs = Message::query()->where('id_charge_point', $id)->where('id_message_type', '!=', $heartbeat->id)->orderBy('created_at', 'desc')->get()->map(function($element) use ($types){
 			$element->type = $types->where('id', $element->id_message_type)->first()->type;
 			return $element;
 		});
@@ -38,6 +41,27 @@ class ChargePointController extends Controller{
 		return response()->json([
 			'success' => true,
 			'payload' => $msgs
+		]);
+	}
+
+	public function sendChargePointMessage(Request $request, $id)
+	{
+		$model = new ServerMsgQueue();
+		$model->id_charge_point = $id;
+		$model->payload = [
+			'action' => 'TriggerMessage',
+			'text'   => [
+				'requestedMessage' => $request->get('requestedMessage'),
+				'connectorId'      => $request->get('connectorId')
+			]
+		];
+		$model->user_id = Auth::user()->id;
+		$model->message_type = $request->get('type');
+		$model->save();
+
+		return response()->json([
+			'success' => true,
+			'msg'     => $model->id
 		]);
 	}
 }
