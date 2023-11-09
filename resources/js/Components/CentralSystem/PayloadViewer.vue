@@ -9,7 +9,7 @@
 </script>
 
 <template>
-	<div class="inline-flex justify-between" style="width: 100%">
+	<div class="inline-flex flex-wrap justify-between" style="width: 100%">
 		<span class="key-value p-2" v-for="(value,key) in parsed">
 			<b><span class="pr-4">{{key}}:</span></b>{{value || "No value"}}
 		</span>
@@ -22,8 +22,5 @@
 		width: 50%;
 		overflow: auto;
 		border-bottom: 1px dashed rgb(128, 128, 128);
-	}
-	.inline-flex{
-		flex-wrap: wrap;
 	}
 </style>

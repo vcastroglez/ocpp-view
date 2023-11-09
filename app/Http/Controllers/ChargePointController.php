@@ -6,13 +6,15 @@ use App\Http\Services\ChargePointService;
 use App\Models\Message;
 use App\Models\MessageType;
 use App\Models\ServerMsgQueue;
-use Illuminate\Foundation\Auth\User;
+use App\Models\Transaction;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ChargePointController extends Controller{
-	public function get(Request $request)
+	public function get(Request $request): JsonResponse
 	{
 		$service = new ChargePointService();
 
@@ -22,14 +24,14 @@ class ChargePointController extends Controller{
 		]);
 	}
 
-	public function getChargePoint(Request $request, $id)
+	public function getChargePoint(Request $request, $id): Response
 	{
 		return Inertia::render('CentralSystem/ChargePoint', [
 			'chargePointId' => (int)$id,
 		]);
 	}
 
-	public function getChargePointMessages(Request $request, $id)
+	public function getChargePointMessages(Request $request, $id): JsonResponse
 	{
 		$types = MessageType::all();
 		$heartbeat = $types->where('type', 'Heartbeat')->first();
@@ -44,7 +46,17 @@ class ChargePointController extends Controller{
 		]);
 	}
 
-	public function sendChargePointMessage(Request $request, $id)
+	public function getChargePointTransactions(Request $request, $id): JsonResponse
+	{
+		$transactions = Transaction::query()->where('id_charge_point', $id)->orderBy('id','DESC')->get();
+
+		return response()->json([
+			'success' => true,
+			'payload' => $transactions
+		]);
+	}
+
+	public function sendChargePointMessage(Request $request, $id): JsonResponse
 	{
 		$model = new ServerMsgQueue();
 		$model->id_charge_point = $id;
