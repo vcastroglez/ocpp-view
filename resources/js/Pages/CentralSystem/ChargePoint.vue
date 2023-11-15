@@ -5,6 +5,7 @@ import MessagesViewer from "@/Components/CentralSystem/MessagesViewer.vue";
 import useEventsBus from "@/eventBus.js";
 import {reactive, watch} from "vue";
 import TransactionsViewer from "@/Components/CentralSystem/TransactionsViewer.vue";
+import ConfigurationsCrud from "@/Components/CentralSystem/ConfigurationsCrud.vue";
 
 const {emit} = useEventsBus();
 
@@ -15,7 +16,8 @@ const props = defineProps({
 });
 
 const state = reactive({
-	tab: 'transactions'
+	tab: 'transactions',
+	configurations: []
 })
 
 watch(() => state.tab, (value) => {
@@ -47,6 +49,7 @@ const triggerGetMessages = () => {
 					</h2>
 				</div>
 				<div>
+					<div :class="{active: state.tab==='configurations'}" class="button mr-2" @click="state.tab='configurations'">Configurations</div>
 					<div :class="{active: state.tab==='msgs'}" class="button mr-2" @click="state.tab='msgs'">Messages</div>
 					<div :class="{active: state.tab==='transactions'}" class="button" @click="state.tab='transactions'">Transactions</div>
 				</div>
@@ -56,9 +59,9 @@ const triggerGetMessages = () => {
 				</div>
 			</div>
 		</template>
-
 		<MessagesViewer v-show="state.tab==='msgs'" :charge-point-id="chargePointId"></MessagesViewer>
 		<TransactionsViewer v-show="state.tab==='transactions'" :charge-point-id="chargePointId"></TransactionsViewer>
+		<ConfigurationsCrud v-if="state.tab==='configurations'" :charge-point-id="chargePointId"></ConfigurationsCrud>
 	</AuthenticatedLayout>
 </template>
 <style scoped>

@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
 	Route::get('/charge-point/{id}',[ChargePointController::class, 'getChargePoint'])->name('charge_point.get');
 	Route::get('/get-messages/{id}',[ChargePointController::class, 'getChargePointMessages'])->name('msg.get');
 	Route::get('/get-transactions/{id}',[ChargePointController::class, 'getChargePointTransactions'])->name('transactions.get');
+	Route::get('/get-configurations/{id}',[ChargePointController::class, 'getChargePointConfigurations'])->name('configurations.get');
+	Route::post('/set-configuration/{id}',[ChargePointController::class, 'setChargePointConfigurations'])->name('configurations.post');
 	Route::post('/send-charge-point-msg/{id}',[ChargePointController::class,'sendChargePointMessage'])->name('msg.post');
 });
 

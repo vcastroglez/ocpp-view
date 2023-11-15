@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\ChargePointService;
+use App\Models\ChargePointConfiguration;
 use App\Models\Message;
 use App\Models\MessageType;
 use App\Models\ServerMsgQueue;
@@ -48,11 +49,51 @@ class ChargePointController extends Controller{
 
 	public function getChargePointTransactions(Request $request, $id): JsonResponse
 	{
-		$transactions = Transaction::query()->where('id_charge_point', $id)->orderBy('id','DESC')->get();
+		$transactions = Transaction::query()->where('id_charge_point', $id)->orderBy('id', 'DESC')->get();
 
 		return response()->json([
 			'success' => true,
 			'payload' => $transactions
+		]);
+	}
+
+	public function getChargePointConfigurations(Request $request, $id): JsonResponse
+	{
+		$configurations = ChargePointConfiguration::query()->where('id_charge_point', $id)->get();
+
+		$model = new ServerMsgQueue();
+		$model->id_charge_point = $id;
+		$model->payload = [
+			'action' => 'GetConfiguration',
+			'text'   => new \stdClass()
+		];
+		$model->user_id = Auth::user()->id;
+		$model->message_type = 2;
+		$model->save();
+
+		return response()->json([
+			'success' => true,
+			'payload' => $configurations
+		]);
+	}
+
+	public function setChargePointConfigurations(Request $request, $id): JsonResponse
+	{
+		$model = new ServerMsgQueue();
+		$model->id_charge_point = $id;
+		$model->payload = [
+			'action' => 'ChangeConfiguration',
+			'text'   => [
+				'key' => $request->get('key'),
+				'value' => $request->get('value')
+			]
+		];
+		$model->user_id = Auth::user()->id;
+		$model->message_type = 2;
+		$model->save();
+		return response()->json([
+			'success' => true,
+			'msg'     => $request->all()
 		]);
 	}
 
