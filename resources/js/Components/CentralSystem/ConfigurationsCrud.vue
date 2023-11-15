@@ -23,25 +23,26 @@ watch(() => bus.value.get('get-messages'), (payload) => {
 		getConfigurations();
 	}
 })
+let configurationTimeout = {};
 
 const getConfigurations = () => {
 	axios.get(`/get-configurations/${props.chargePointId}`).then(response => {
 		state.configurations = response.data.payload;
+		clearTimeout(configurationTimeout);
 		if (!state.configurations.length) {
-			setTimeout(() => {
+			configurationTimeout = setTimeout(() => {
 				getConfigurations()
 			}, 1500);
 		}
 	})
 }
-
 const editConfiguration = (configuration) => {
 	if (configuration.readonly) return;
 	const newValue = window.prompt(`Set new value for ${configuration.key}:`, configuration.value);
 	if (!newValue) return;
 
-	axios.post(`/set-configuration/${props.chargePointId}`, {key:configuration.key,value: newValue});
-	setTimeout(() => {
+	axios.post(`/set-configuration/${props.chargePointId}`, {key: configuration.key, value: newValue});
+	configurationTimeout = setTimeout(() => {
 		getConfigurations()
 	}, 2000);
 }
