@@ -1,7 +1,9 @@
 <script setup>
 
 import {reactive} from "vue";
+import useUtils from "@/functions.js";
 
+const {goto} = useUtils();
 const state = reactive({
 	chargePoints: []
 })
@@ -15,14 +17,11 @@ const getChargepoints = () => {
 
 getChargepoints();
 
-const goto = (route) => {
-	window.location.href = route;
-}
 </script>
 
 <template>
 	<div class="py-12 justify-items-center flex wrap">
-		<div @click="goto('/charge-point/'+chargePoint.id)" class="charge-point p-3"
+		<div @click="goto(`/charge-point/${chargePoint.id}`)" class="charge-point p-3"
 		     v-for="chargePoint in state.chargePoints" :key="chargePoint.id">
 			<div class="">
 				<b>idTag:</b> {{ chargePoint.uuid }}

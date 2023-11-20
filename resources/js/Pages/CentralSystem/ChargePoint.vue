@@ -14,7 +14,6 @@ const props = defineProps({
 		type: Number,
 	},
 });
-
 const state = reactive({
 	tab: 'transactions',
 	configurations: []
@@ -49,9 +48,14 @@ const triggerGetMessages = () => {
 					</h2>
 				</div>
 				<div>
-					<div :class="{active: state.tab==='configurations'}" class="button mr-2" @click="state.tab='configurations'">Configurations</div>
-					<div :class="{active: state.tab==='msgs'}" class="button mr-2" @click="state.tab='msgs'">Messages</div>
-					<div :class="{active: state.tab==='transactions'}" class="button" @click="state.tab='transactions'">Transactions</div>
+					<div :class="{active: state.tab==='configurations'}" class="button mr-2"
+					     @click="state.tab='configurations'">Configurations
+					</div>
+					<div :class="{active: state.tab==='msgs'}" class="button mr-2" @click="state.tab='msgs'">Messages
+					</div>
+					<div :class="{active: state.tab==='transactions'}" class="button" @click="state.tab='transactions'">
+						Transactions
+					</div>
 				</div>
 				<div>
 					<button class="button mr-2" @click="triggerMessage()">Trigger Message</button>
@@ -59,8 +63,8 @@ const triggerGetMessages = () => {
 				</div>
 			</div>
 		</template>
-		<MessagesViewer v-show="state.tab==='msgs'" :charge-point-id="chargePointId"></MessagesViewer>
-		<TransactionsViewer v-show="state.tab==='transactions'" :charge-point-id="chargePointId"></TransactionsViewer>
+		<MessagesViewer v-if="state.tab==='msgs'" :charge-point-id="chargePointId"></MessagesViewer>
+		<TransactionsViewer v-if="state.tab==='transactions'" :charge-point-id="chargePointId"></TransactionsViewer>
 		<ConfigurationsCrud v-if="state.tab==='configurations'" :charge-point-id="chargePointId"></ConfigurationsCrud>
 	</AuthenticatedLayout>
 </template>

@@ -30,7 +30,10 @@ const showingNavigationDropdown = ref(false);
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                    Charge Points
+                                </NavLink>
+                                <NavLink :href="route('clients')" :active="route().current('clients')">
+                                    Clients
                                 </NavLink>
                             </div>
                         </div>

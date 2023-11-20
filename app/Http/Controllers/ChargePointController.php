@@ -49,7 +49,7 @@ class ChargePointController extends Controller{
 
 	public function getChargePointTransactions(Request $request, $id): JsonResponse
 	{
-		$transactions = Transaction::query()->where('id_charge_point', $id)->orderBy('id', 'DESC')->get();
+		$transactions = Transaction::query()->where('id_charge_point', $id)->orderBy('id', 'DESC')->with('client')->get();
 
 		return response()->json([
 			'success' => true,
@@ -84,7 +84,7 @@ class ChargePointController extends Controller{
 		$model->payload = [
 			'action' => 'ChangeConfiguration',
 			'text'   => [
-				'key' => $request->get('key'),
+				'key'   => $request->get('key'),
 				'value' => $request->get('value')
 			]
 		];

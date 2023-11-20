@@ -64,7 +64,7 @@ getConfigurations();
 					</tr>
 					</thead>
 					<tbody>
-					<tr class="pointer" :style="configuration.readonly?'background-color: #e3e3e3':''"
+					<tr class="pointer" :class="configuration.readonly?'darken':''"
 					    @click="editConfiguration(configuration)"
 					    v-for="configuration in state.configurations"
 					    :key="configuration.id">
