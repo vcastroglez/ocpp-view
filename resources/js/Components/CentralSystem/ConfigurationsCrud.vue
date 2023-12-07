@@ -57,8 +57,8 @@ getConfigurations();
 <template>
 	<div class="py-12">
 
-		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-			<div>
+		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-4">
+			<div class="flex pull-right">
 				<button @click="getConfiguration(undefined)" class="button">Request configuration</button>
 			</div>
 		</div>
@@ -76,7 +76,6 @@ getConfigurations();
 					</thead>
 					<tbody>
 					<tr class="pointer" :class="configuration.readonly?'darken':''"
-					    @click="editConfiguration(configuration)"
 					    v-for="configuration in state.configurations"
 					    :key="configuration.id">
 						<td>{{ configuration.key }}</td>
@@ -85,7 +84,10 @@ getConfigurations();
 							{{ configuration.value || "No value" }}
 						</td>
 						<td>{{ humanDate(configuration.updated_at) }}</td>
-						<td><button @click.prevent="getConfiguration(configuration.key)" class="btn icon">🔄</button></td>
+						<td>
+							<button v-if="!configuration.readonly" @click.prevent="editConfiguration(configuration)" class="btn icon">✍️</button>
+							<button  :class="configuration.readonly?'ml-6':'ml-1'" @click.prevent="getConfiguration(configuration.key)" class="btn icon">🔄</button>
+						</td>
 					</tr>
 					</tbody>
 				</table>

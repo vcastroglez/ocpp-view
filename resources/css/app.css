@@ -23,6 +23,10 @@
     background-color: rgb(128, 128, 128);
 }
 
+.flex {
+    display: flex;
+}
+
 .spread {
     display: flex;
     justify-content: space-between;
@@ -75,4 +79,8 @@ tr.pointer:hover {
 
 .darken {
     background-color: #e3e3e3
+}
+
+.pull-right {
+    flex-direction: row-reverse;
 }
