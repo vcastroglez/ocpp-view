@@ -60,16 +60,20 @@ class ChargePointController extends Controller{
 	public function getChargePointConfigurations(Request $request, $id): JsonResponse
 	{
 		$configurations = ChargePointConfiguration::query()->where('id_charge_point', $id)->get();
-
-		$model = new ServerMsgQueue();
-		$model->id_charge_point = $id;
-		$model->payload = [
-			'action' => 'GetConfiguration',
-			'text'   => new \stdClass()
-		];
-		$model->user_id = Auth::user()->id;
-		$model->message_type = 2;
-		$model->save();
+		$possible_configurations = ChargePointConfiguration::query()->select('key')->distinct()->where('id_charge_point',$id)->orderByRaw("RAND()")->limit(5)->get()->pluck('key')->toArray();
+		foreach($possible_configurations as $configuration) {
+			$model = new ServerMsgQueue();
+			$model->id_charge_point = $id;
+			$model->payload = [
+				'action' => 'GetConfiguration',
+				'text'   => [
+					'key' => [$configuration]
+				]
+			];
+			$model->user_id = Auth::user()->id;
+			$model->message_type = 2;
+			$model->save();
+		}
 
 		return response()->json([
 			'success' => true,

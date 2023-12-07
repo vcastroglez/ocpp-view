@@ -28,12 +28,11 @@ let configurationTimeout = {};
 const getConfigurations = () => {
 	axios.get(`/get-configurations/${props.chargePointId}`).then(response => {
 		state.configurations = response.data.payload;
-		clearTimeout(configurationTimeout);
-		if (!state.configurations.length) {
-			configurationTimeout = setTimeout(() => {
-				getConfigurations()
-			}, 1500);
-		}
+	})
+}
+const getConfiguration = (configuration) => {
+	axios.get(`/get-configuration/${props.chargePointId}?configuration=${configuration}`).then(response => {
+		state.configurations = response.data.payload;
 	})
 }
 const editConfiguration = (configuration) => {
@@ -43,11 +42,10 @@ const editConfiguration = (configuration) => {
 
 	axios.post(`/set-configuration/${props.chargePointId}`, {key: configuration.key, value: newValue});
 	configurationTimeout = setTimeout(() => {
-		getConfigurations()
+		getConfiguration(configuration.key)
 	}, 2000);
 }
 
-getConfigurations();
 </script>
 
 <template>
@@ -61,6 +59,7 @@ getConfigurations();
 						<th>Readonly</th>
 						<th>Value</th>
 						<th>Last update</th>
+						<th></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -74,6 +73,7 @@ getConfigurations();
 							{{ configuration.value || "No value" }}
 						</td>
 						<td>{{ humanDate(configuration.updated_at) }}</td>
+						<td><button @click.prevent="getConfiguration(configuration.key)" class="btn icon">🔄</button></td>
 					</tr>
 					</tbody>
 				</table>
