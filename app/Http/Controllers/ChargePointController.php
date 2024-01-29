@@ -127,4 +127,15 @@ class ChargePointController extends Controller{
 			'msg'     => $model->id
 		]);
 	}
+
+	public function delete(Request $request, $id): JsonResponse
+	{
+		$service = new ChargePointService();
+		$service->deleteChargePoint($id);
+
+		return response()->json([
+			'success' => true,
+			'msg'     => $request->all()
+		]);
+	}
 }

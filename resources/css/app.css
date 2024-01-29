@@ -27,6 +27,12 @@
     display: flex;
 }
 
+.col-6 {
+    flex: 50%;
+    float: left;
+    min-width: 50%;
+}
+
 .spread {
     display: flex;
     justify-content: space-between;

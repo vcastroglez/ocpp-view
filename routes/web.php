@@ -70,6 +70,11 @@ Route::middleware('auth')->group(function(){
 		'get'
 	])->name('charge_points.get');
 
+	Route::get('/delete-charge-point/{id}', [
+		ChargePointController::class,
+		'delete'
+	])->name('charge_points.delete');
+
 	Route::get('/charge-point/{id}', [
 		ChargePointController::class,
 		'getChargePoint'
@@ -111,4 +116,4 @@ Route::middleware('auth')->group(function(){
 	])->name('msg.post');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

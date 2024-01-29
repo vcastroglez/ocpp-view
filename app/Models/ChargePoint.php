@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ChargePoint extends Model{
+class ChargePoint extends Model
+{
 
 	protected $guarded = ['id'];
 }

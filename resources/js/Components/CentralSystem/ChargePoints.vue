@@ -3,7 +3,7 @@
 import {reactive} from "vue";
 import useUtils from "@/functions.js";
 
-const {goto} = useUtils();
+const {goto, alert} = useUtils();
 const state = reactive({
 	chargePoints: []
 })
@@ -15,21 +15,36 @@ const getChargepoints = () => {
 	})
 }
 
+const deleteChargePoint = (id) => {
+	console.log(id);
+	alert("Estas seguro que quieres eliminar el chargePoint?", "Eliminar").then(response => {
+		if (response) {
+			axios(`/delete-charge-point/${id}`).then(() => {
+				getChargepoints();
+			});
+		}
+	});
+}
+
 getChargepoints();
 
 </script>
 
 <template>
 	<div class="py-12 justify-items-center flex wrap">
-		<div @click="goto(`/charge-point/${chargePoint.id}`)" class="charge-point p-3"
+		<div class="charge-point p-3"
 		     v-for="chargePoint in state.chargePoints" :key="chargePoint.id">
-			<div class="">
-				<b>idTag:</b> {{ chargePoint.uuid }}
+			<div class="flex-row">
+				<div class="flex col-6" @click="goto(`/charge-point/${chargePoint.id}`)"><b>idTag:</b>
+					{{ chargePoint.uuid }}
+				</div>
+				<div class="flex col-6 pull-right"><a @click="deleteChargePoint(chargePoint.id)" class="btn icon">🗑️</a>
+				</div>
 			</div>
-			<div>
+			<div @click="goto(`/charge-point/${chargePoint.id}`)">
 				<b>Last meter value:</b> {{ chargePoint.last_meter_value }}
 			</div>
-			<div>
+			<div @click="goto(`/charge-point/${chargePoint.id}`)">
 				<b>Last transaction id:</b> {{ chargePoint.last_transaction_id }}
 			</div>
 		</div>
