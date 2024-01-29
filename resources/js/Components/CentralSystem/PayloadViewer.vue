@@ -1,7 +1,7 @@
 <script setup>
 	const props = defineProps({
 		payload: {
-			type: Object
+			type: String
 		}
 	})
 

@@ -35,10 +35,10 @@ getChargepoints();
 		<div class="charge-point p-3"
 		     v-for="chargePoint in state.chargePoints" :key="chargePoint.id">
 			<div class="flex-row">
-				<div class="flex col-6" @click="goto(`/charge-point/${chargePoint.id}`)"><b>idTag:</b>
+				<div class="flex col-8" @click="goto(`/charge-point/${chargePoint.id}`)"><b>idTag:</b>
 					{{ chargePoint.uuid }}
 				</div>
-				<div class="flex col-6 pull-right"><a @click="deleteChargePoint(chargePoint.id)" class="btn icon">🗑️</a>
+				<div class="flex col-4 pull-right"><a @click="deleteChargePoint(chargePoint.id)" class="btn icon">🗑️</a>
 				</div>
 			</div>
 			<div @click="goto(`/charge-point/${chargePoint.id}`)">

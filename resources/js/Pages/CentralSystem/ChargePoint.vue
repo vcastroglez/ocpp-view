@@ -16,7 +16,8 @@ const props = defineProps({
 });
 const state = reactive({
 	tab: 'transactions',
-	configurations: []
+	configurations: [],
+	last_status: '',
 })
 
 watch(() => state.tab, (value) => {
@@ -33,9 +34,16 @@ const triggerMessage = () => {
 		}, 2000);
 	});
 }
+
+const getLastStatus = async () => {
+	const {data} = await axios(`/get-last-status/${props.chargePointId}`);
+	state.last_status = data.last_status;
+}
 const triggerGetMessages = () => {
 	emit('get-messages', props.chargePointId);
 }
+
+getLastStatus();
 </script>
 <template>
 	<Head title="Dashboard"/>
@@ -44,7 +52,7 @@ const triggerGetMessages = () => {
 		<template #header>
 			<div class="spread">
 				<div>
-					<h2 class="font-semibold text-xl text-gray-800 leading-tight">Charge Point: {{ chargePointId }}
+					<h2 class="font-semibold text-xl text-gray-800 leading-tight">Charge Point: {{ chargePointId }} - {{state.last_status}}
 					</h2>
 				</div>
 				<div>

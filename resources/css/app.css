@@ -33,6 +33,12 @@
     min-width: 50%;
 }
 
+.col-8 {
+    flex: 66.5%;
+    float: left;
+    min-width: 66.5%;
+}
+
 .spread {
     display: flex;
     justify-content: space-between;

@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class ChargePointController extends Controller{
+class ChargePointController extends Controller
+{
 	public function get(Request $request): JsonResponse
 	{
 		$service = new ChargePointService();
@@ -28,22 +29,42 @@ class ChargePointController extends Controller{
 	public function getChargePoint(Request $request, $id): Response
 	{
 		return Inertia::render('CentralSystem/ChargePoint', [
-			'chargePointId' => (int)$id,
+			'chargePointId' => (int) $id,
 		]);
 	}
 
 	public function getChargePointMessages(Request $request, $id): JsonResponse
 	{
 		$types = MessageType::all();
-		$heartbeat = $types->where('type', 'Heartbeat')->first();
-		$msgs = Message::query()->where('id_charge_point', $id)->where('id_message_type', '!=', $heartbeat->id)->orderBy('created_at', 'desc')->get()->map(function($element) use ($types){
-			$element->type = $types->where('id', $element->id_message_type)->first()->type;
-			return $element;
-		});
+		$heartbeat = $types->whereIn('type', [
+			'Heartbeat',
+			'StartTransaction',
+			'StopTransaction'
+		])->pluck('id');
+		$msgs = Message::query()
+					   ->where('id_charge_point', $id)
+					   ->whereNotIn('id_message_type', $heartbeat)
+					   ->orderBy('created_at', 'desc')
+					   ->get()
+					   ->map(function($element) use ($types){
+						   $element->type = $types->where('id', $element->id_message_type)->first()->type;
+						   return $element;
+					   });
 
 		return response()->json([
 			'success' => true,
-			'payload' => $msgs
+			'payload' => $msgs,
+		]);
+	}
+
+	public function getLastStatus($id)
+	{
+		$types = MessageType::all();
+		$status_notification = $types->where('type', 'StatusNotification')->pluck('id');
+		$last_status = Message::query()->where('id_charge_point', $id)->where('id_message_type', $status_notification)->orderBy('created_at', 'desc')->first();
+		return response()->json([
+			'success'     => true,
+			'last_status' => json_decode($last_status->payload ?? "", true)['status'] ?? 'NoStatus'
 		]);
 	}
 

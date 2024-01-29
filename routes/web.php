@@ -90,6 +90,11 @@ Route::middleware('auth')->group(function(){
 		'getChargePointMessages'
 	])->name('msg.get');
 
+	Route::get('/get-last-status/{id}', [
+		ChargePointController::class,
+		'getLastStatus'
+	])->name('status.get');
+
 	Route::get('/get-transactions/{id}', [
 		ChargePointController::class,
 		'getChargePointTransactions'
